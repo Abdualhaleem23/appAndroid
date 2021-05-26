@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('code_libya')->unique();
+            $table->enum('role',['super_admin','admin','user']);
             $table->string('code_bank')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

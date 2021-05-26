@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccountIfo;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -25,6 +26,8 @@ class AuthController extends Controller
         if (! $token = auth()->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+
+
 
         return $this->createNewToken($token);
     }
@@ -75,11 +78,18 @@ class AuthController extends Controller
 
 
     public function userProfile() {
-        return response()->json(auth()->user());
+       $data  = auth()->user();
+       $getinfo = AccountIfo::where(['user_id' => auth()->user()->id]);
+       if ($getinfo->count() == 0){
+           $data2 = null;
+       }else{
+         $data2 =  $getinfo->get();
+       }
+        return response()->json([
+            'data' => $data ,
+            'data2'=>$data2,
+            'success' => true]);
     }
-
-
-
     protected function createNewToken($token){
         return response()->json([
             'access_token' => $token,
